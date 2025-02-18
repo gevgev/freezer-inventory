@@ -1,0 +1,243 @@
+{
+  "info": {
+    "name": "Freezer Inventory API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login Admin",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/auth/login",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+                "raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"Password123!\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('token', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/auth/register",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"Password123!\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Items",
+      "item": [
+        {
+          "name": "List All Items",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/items",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Get Item",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/items/{{item_id}}",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Create Item",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/items",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"New Item\",\n    \"description\": \"Description\",\n    \"packaging\": \"Package\",\n    \"weight_unit\": \"kg\",\n    \"expiration_date\": \"2024-12-31\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inventory",
+      "item": [
+        {
+          "name": "Get Inventory Status",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/inventory/{{item_id}}/status",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Get Inventory History",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/inventory/{{item_id}}/history",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Add Inventory Entry",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/inventory",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"item_id\": \"{{item_id}}\",\n    \"change\": 1,\n    \"weight\": 2.5,\n    \"weight_unit\": \"kg\",\n    \"notes\": \"Added stock\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "List Categories",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/categories",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/categories",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"New Category\",\n    \"description\": \"Category description\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tags",
+      "item": [
+        {
+          "name": "List Tags",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/tags",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Create Tag",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/tags",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"New Tag\"\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+} 
