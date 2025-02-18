@@ -197,6 +197,51 @@
               "raw": "{\n    \"name\": \"New Category\",\n    \"description\": \"Category description\"\n}"
             }
           }
+        },
+        {
+          "name": "Update Category",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Category is updated correctly', function () {",
+                  "    const responseData = pm.response.json();",
+                  "    const requestData = JSON.parse(pm.request.body.raw);",
+                  "",
+                  "    if (requestData.name) {",
+                  "        pm.expect(responseData.name).to.equal(requestData.name);",
+                  "    }",
+                  "    if (requestData.description) {",
+                  "        pm.expect(responseData.description).to.equal(requestData.description);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/api/categories/{{category_id}}",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Category\",\n    \"description\": \"Updated description\"\n}"
+            }
+          }
         }
       ]
     },
@@ -238,6 +283,235 @@
           }
         }
       ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "List Users",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    const responseData = pm.response.json();",
+                  "    pm.expect(Array.isArray(responseData)).to.be.true;",
+                  "});",
+                  "",
+                  "pm.test('Users have required fields', function () {",
+                  "    const responseData = pm.response.json();",
+                  "    if (responseData.length > 0) {",
+                  "        pm.expect(responseData[0]).to.have.property('id');",
+                  "        pm.expect(responseData[0]).to.have.property('email');",
+                  "        pm.expect(responseData[0]).to.have.property('role');",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/users",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Get User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('User has required fields', function () {",
+                  "    const responseData = pm.response.json();",
+                  "    pm.expect(responseData).to.have.property('id');",
+                  "    pm.expect(responseData).to.have.property('email');",
+                  "    pm.expect(responseData).to.have.property('role');",
+                  "});",
+                  "",
+                  "pm.test('User ID matches request', function () {",
+                  "    const responseData = pm.response.json();",
+                  "    pm.expect(responseData.id).to.equal(pm.environment.get('user_id'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/users/{{user_id}}",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Update User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('User is updated correctly', function () {",
+                  "    const responseData = pm.response.json();",
+                  "    const requestData = JSON.parse(pm.request.body.raw);",
+                  "",
+                  "    if (requestData.email) {",
+                  "        pm.expect(responseData.email).to.equal(requestData.email);",
+                  "    }",
+                  "    if (requestData.role) {",
+                  "        pm.expect(responseData.role).to.equal(requestData.role);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/api/users/{{user_id}}",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"updated@example.com\",\n    \"password\": \"newpassword123\",\n    \"role\": \"user\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Success message is returned', function () {",
+                  "    const responseData = pm.response.json();",
+                  "    pm.expect(responseData).to.have.property('message');",
+                  "    pm.expect(responseData.message).to.equal('User deleted successfully');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/api/users/{{user_id}}",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Create User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('User is created with correct data', function () {",
+                  "    const responseData = pm.response.json();",
+                  "    const requestData = JSON.parse(pm.request.body.raw);",
+                  "",
+                  "    pm.expect(responseData).to.have.property('id');",
+                  "    pm.expect(responseData.email).to.equal(requestData.email);",
+                  "    pm.expect(responseData.role).to.equal(requestData.role);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/users",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"newuser@example.com\",\n    \"password\": \"Password123!\",\n    \"role\": \"user\"\n}"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": [
+          "// Login as admin if no token exists",
+          "if (!pm.environment.get('token')) {",
+          "    pm.sendRequest({",
+          "        url: pm.environment.get('base_url') + '/auth/login',",
+          "        method: 'POST',",
+          "        header: {",
+          "            'Content-Type': 'application/json'",
+          "        },",
+          "        body: {",
+          "            mode: 'raw',",
+          "            raw: JSON.stringify({",
+          "                email: 'admin@example.com',",
+          "                password: 'admin123'",
+          "            })",
+          "        }",
+          "    }, function (err, res) {",
+          "        if (!err && res.code === 200) {",
+          "            pm.environment.set('token', res.json().token);",
+          "        }",
+          "    });",
+          "}"
+        ]
+      }
     }
   ]
 } 

@@ -25,6 +25,7 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 
 	// Initialize handlers
 	authHandler := handlers.NewAuthHandler(db)
+	userHandler := handlers.NewUserHandler(db)
 	itemHandler := handlers.NewItemHandler(db)
 	inventoryHandler := handlers.NewInventoryHandler(db)
 	categoryHandler := handlers.NewCategoryHandler(db)
@@ -45,6 +46,17 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	api := router.Group("/api")
 	api.Use(middleware.AuthRequired())
 	{
+		// User Management (Admin only)
+		users := api.Group("/users")
+		users.Use(middleware.AdminRequired())
+		{
+			users.GET("", userHandler.List)
+			users.POST("", userHandler.Create)
+			users.GET("/:id", userHandler.Get)
+			users.PUT("/:id", userHandler.Update)
+			users.DELETE("/:id", userHandler.Delete)
+		}
+
 		// Items
 		api.GET("/items", itemHandler.List)
 		api.POST("/items", itemHandler.Create)
@@ -61,6 +73,7 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 		// Categories
 		api.GET("/categories", categoryHandler.List)
 		api.POST("/categories", middleware.AdminRequired(), categoryHandler.Create)
+		api.PUT("/categories/:id", middleware.AdminRequired(), categoryHandler.Update)
 
 		// Tags
 		api.GET("/tags", tagHandler.List)
