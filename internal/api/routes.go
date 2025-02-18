@@ -78,6 +78,7 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 		// Tags
 		api.GET("/tags", tagHandler.List)
 		api.POST("/tags", middleware.AdminRequired(), tagHandler.Create)
+		api.PUT("/tags/:id", middleware.AdminRequired(), tagHandler.Update)
 	}
 
 	return router
