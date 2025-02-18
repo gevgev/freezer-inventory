@@ -1,14 +1,27 @@
 package api
 
 import (
+	"time"
+
 	"github.com/gevgev/freezer-inventory/internal/api/handlers"
 	"github.com/gevgev/freezer-inventory/internal/api/middleware"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 func SetupRouter(db *gorm.DB) *gin.Engine {
 	router := gin.Default()
+
+	// CORS middleware configuration
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000"}, // Your React app URL
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	// Initialize handlers
 	authHandler := handlers.NewAuthHandler(db)
