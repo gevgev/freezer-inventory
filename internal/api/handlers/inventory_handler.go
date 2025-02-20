@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gevgev/freezer-inventory/internal/models"
 	"github.com/gin-gonic/gin"
@@ -54,11 +55,28 @@ func (h *InventoryHandler) GetHistory(c *gin.Context) {
 	c.JSON(http.StatusOK, logs)
 }
 
+type AddInventoryRequest struct {
+	ItemID     uuid.UUID `json:"item_id" binding:"required"`
+	Change     int       `json:"change" binding:"required"`
+	Weight     float64   `json:"weight" binding:"required"`
+	WeightUnit string    `json:"weight_unit" binding:"required,oneof=kg g lb oz"`
+	Notes      string    `json:"notes"`
+}
+
 func (h *InventoryHandler) AddEntry(c *gin.Context) {
-	var log models.InventoryLog
-	if err := c.ShouldBindJSON(&log); err != nil {
+	var req AddInventoryRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
+	}
+
+	log := models.InventoryLog{
+		ItemID:     req.ItemID,
+		Timestamp:  time.Now(),
+		Change:     req.Change,
+		Weight:     req.Weight,
+		WeightUnit: req.WeightUnit,
+		Notes:      req.Notes,
 	}
 
 	if err := h.db.Create(&log).Error; err != nil {
