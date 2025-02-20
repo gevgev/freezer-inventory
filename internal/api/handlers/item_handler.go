@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gevgev/freezer-inventory/internal/models"
 	"github.com/gin-gonic/gin"
@@ -26,11 +27,37 @@ func (h *ItemHandler) List(c *gin.Context) {
 	c.JSON(http.StatusOK, items)
 }
 
+type CreateItemRequest struct {
+	Name           string `json:"name" binding:"required"`
+	Description    string `json:"description"`
+	Barcode        string `json:"barcode"`
+	ImageURL       string `json:"image_url"`
+	Packaging      string `json:"packaging"`
+	WeightUnit     string `json:"weight_unit" binding:"required,oneof=kg g lb oz"`
+	ExpirationDate string `json:"expiration_date" binding:"required"`
+}
+
 func (h *ItemHandler) Create(c *gin.Context) {
-	var item models.Item
-	if err := c.ShouldBindJSON(&item); err != nil {
+	var req CreateItemRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
+	}
+
+	expirationDate, err := time.Parse("2006-01-02", req.ExpirationDate)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid date format. Use YYYY-MM-DD"})
+		return
+	}
+
+	item := models.Item{
+		Name:           req.Name,
+		Description:    req.Description,
+		Barcode:        req.Barcode,
+		ImageURL:       req.ImageURL,
+		Packaging:      req.Packaging,
+		WeightUnit:     req.WeightUnit,
+		ExpirationDate: expirationDate,
 	}
 
 	if err := h.db.Create(&item).Error; err != nil {

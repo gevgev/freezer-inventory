@@ -140,9 +140,7 @@ Request:
     "description": "Organic chicken breast",
     "packaging": "Package",
     "weight_unit": "kg",
-    "expiration_date": "2024-12-31",
-    "category_ids": ["uuid1", "uuid2"],
-    "tag_ids": ["uuid1", "uuid2"]
+    "expiration_date": "2024-12-31"
 }
 
 Response: 201 Created
