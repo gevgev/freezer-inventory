@@ -74,4 +74,9 @@ CREATE INDEX idx_item_tags_item_id ON item_tags(item_id);
 
 -- Insert admin user (password: admin123)
 INSERT INTO users (email, password_hash, role) VALUES 
-('admin@example.com', '$2a$10$ZkX5nxV1cJ/CD9UW9LC37OmpxS99p3eQBJ.1kV.bm5/QwZ.fx.OXe', 'admin'); 
+('admin@example.com', '$2a$10$ZkX5nxV1cJ/CD9UW9LC37OmpxS99p3eQBJ.1kV.bm5/QwZ.fx.OXe', 'admin');
+
+-- Add this query to check data
+SELECT * FROM items WHERE id = '7eac6319-2b8c-4eb0-955d-225d57d1d4ff';
+SELECT * FROM categories WHERE id = '3981bfd6-7410-444f-a37e-4f355df7883e';
+SELECT * FROM item_categories WHERE item_id = '7eac6319-2b8c-4eb0-955d-225d57d1d4ff' AND category_id = '3981bfd6-7410-444f-a37e-4f355df7883e'; 

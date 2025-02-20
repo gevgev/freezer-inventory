@@ -58,12 +58,19 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 		}
 
 		// Items
-		api.GET("/items", itemHandler.List)
-		api.POST("/items", itemHandler.Create)
-		api.GET("/items/:id", itemHandler.Get)
-		api.PUT("/items/:id", itemHandler.Update)
-		api.DELETE("/items/:id", itemHandler.Delete)
-		api.GET("/items/search", itemHandler.Search)
+		items := api.Group("/items")
+		{
+			items.GET("", itemHandler.List)
+			items.POST("", itemHandler.Create)
+			items.GET("/:id", itemHandler.Get)
+			items.PUT("/:id", itemHandler.Update)
+			items.DELETE("/:id", itemHandler.Delete)
+			items.GET("/search", itemHandler.Search)
+			items.POST("/:id/categories", itemHandler.AddCategories)
+			items.DELETE("/:id/categories/:category_id", itemHandler.RemoveCategory)
+			items.POST("/:id/tags", itemHandler.AddTags)
+			items.DELETE("/:id/tags/:tag_id", itemHandler.RemoveTag)
+		}
 
 		// Inventory
 		api.GET("/inventory/:item_id/status", inventoryHandler.GetStatus)

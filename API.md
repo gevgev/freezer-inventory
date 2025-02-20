@@ -395,6 +395,66 @@ Response: 200 OK
 }
 ```
 
+### Item Category Management
+
+#### Add Categories to Item
+```http
+POST /api/items/:id/categories
+Authorization: Bearer <token>
+Content-Type: application/json
+
+Request:
+{
+    "category_ids": ["uuid1", "uuid2"]
+}
+
+Response: 200 OK
+{
+    "message": "Categories added successfully"
+}
+```
+
+#### Remove Category from Item
+```http
+DELETE /api/items/:id/categories/:category_id
+Authorization: Bearer <token>
+
+Response: 200 OK
+{
+    "message": "Category removed successfully"
+}
+```
+
+### Item Tag Management
+
+#### Add Tags to Item
+```http
+POST /api/items/:id/tags
+Authorization: Bearer <token>
+Content-Type: application/json
+
+Request:
+{
+    "tag_ids": ["uuid1", "uuid2"]
+}
+
+Response: 200 OK
+{
+    "message": "Tags added successfully"
+}
+```
+
+#### Remove Tag from Item
+```http
+DELETE /api/items/:id/tags/:tag_id
+Authorization: Bearer <token>
+
+Response: 200 OK
+{
+    "message": "Tag removed successfully"
+}
+```
+
 ## Data Types
 
 ### Weight Units
