@@ -181,7 +181,20 @@
       "name": "Inventory",
       "item": [
         {
-          "name": "Get Inventory Status",
+          "name": "Get Current Inventory",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/inventory",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Get Item Status",
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/inventory/{{item_id}}/status",
@@ -194,7 +207,7 @@
           }
         },
         {
-          "name": "Get Inventory History",
+          "name": "Get Item History",
           "request": {
             "method": "GET",
             "url": "{{base_url}}/api/inventory/{{item_id}}/history",
@@ -223,7 +236,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"item_id\": \"{{item_id}}\",\n    \"change\": 1,\n    \"weight\": 2.5,\n    \"weight_unit\": \"kg\",\n    \"notes\": \"Added stock\"\n}"
+              "raw": "{\n    \"item_id\": \"{{item_id}}\",\n    \"change\": 1,\n    \"weight\": 500,\n    \"weight_unit\": \"g\",\n    \"notes\": \"Added new item\"\n}"
             }
           }
         }

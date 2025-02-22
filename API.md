@@ -194,17 +194,28 @@ Response: 200 OK
 
 ### 3. Inventory Management
 
-#### Get Item Status
+#### Get Current Inventory
+Retrieves the current inventory status for all items.
+
 ```http
-GET /api/inventory/:item_id/status
+GET /api/v1/inventory
 Authorization: Bearer <token>
 
 Response: 200 OK
 {
-    "item_id": "123e4567-e89b-12d3-a456-426614174000",
-    "current_stock": 5,
-    "total_weight": 2.5,
-    "weight_unit": "kg"
+    "data": [
+        {
+            "item_id": "123e4567-e89b-12d3-a456-426614174000",
+            "current_stock": 5,
+            "total_weight": 2.5,
+            "weight_unit": "kg"
+        }
+    ],
+    "pagination": {
+        "total": 100,
+        "page": 1,
+        "per_page": 20
+    }
 }
 ```
 

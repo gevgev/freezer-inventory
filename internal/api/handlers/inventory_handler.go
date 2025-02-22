@@ -5,17 +5,22 @@ import (
 	"time"
 
 	"github.com/gevgev/freezer-inventory/internal/models"
+	"github.com/gevgev/freezer-inventory/internal/service"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type InventoryHandler struct {
-	db *gorm.DB
+	db       *gorm.DB
+	services *service.Services
 }
 
-func NewInventoryHandler(db *gorm.DB) *InventoryHandler {
-	return &InventoryHandler{db: db}
+func NewInventoryHandler(db *gorm.DB, services *service.Services) *InventoryHandler {
+	return &InventoryHandler{
+		db:       db,
+		services: services,
+	}
 }
 
 func (h *InventoryHandler) GetStatus(c *gin.Context) {
@@ -85,4 +90,18 @@ func (h *InventoryHandler) AddEntry(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, log)
+}
+
+func (h *InventoryHandler) GetCurrentInventory(c *gin.Context) {
+	inventory, err := h.services.Inventory.GetAllCurrentInventory()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to retrieve inventory",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"inventory": inventory,
+	})
 }

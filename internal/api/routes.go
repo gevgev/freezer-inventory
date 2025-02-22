@@ -5,6 +5,8 @@ import (
 
 	"github.com/gevgev/freezer-inventory/internal/api/handlers"
 	"github.com/gevgev/freezer-inventory/internal/api/middleware"
+	"github.com/gevgev/freezer-inventory/internal/repository"
+	"github.com/gevgev/freezer-inventory/internal/service"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -23,11 +25,16 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 		MaxAge:           12 * time.Hour,
 	}))
 
+	// Initialize services
+	inventoryRepo := repository.NewInventoryRepository(db)
+	inventoryService := service.NewInventoryService(inventoryRepo)
+	services := service.NewServices(inventoryService)
+
 	// Initialize handlers
 	authHandler := handlers.NewAuthHandler(db)
 	userHandler := handlers.NewUserHandler(db)
 	itemHandler := handlers.NewItemHandler(db)
-	inventoryHandler := handlers.NewInventoryHandler(db)
+	inventoryHandler := handlers.NewInventoryHandler(db, services)
 	categoryHandler := handlers.NewCategoryHandler(db)
 	tagHandler := handlers.NewTagHandler(db)
 
@@ -73,6 +80,7 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 		}
 
 		// Inventory
+		api.GET("/inventory", inventoryHandler.GetCurrentInventory)
 		api.GET("/inventory/:item_id/status", inventoryHandler.GetStatus)
 		api.GET("/inventory/:item_id/history", inventoryHandler.GetHistory)
 		api.POST("/inventory", inventoryHandler.AddEntry)
