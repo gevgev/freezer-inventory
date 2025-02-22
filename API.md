@@ -195,27 +195,54 @@ Response: 200 OK
 ### 3. Inventory Management
 
 #### Get Current Inventory
-Retrieves the current inventory status for all items.
+Returns a list of all items with their current inventory status (only items with positive quantity).
 
 ```http
-GET /api/v1/inventory
+GET /api/inventory
 Authorization: Bearer <token>
 
 Response: 200 OK
 {
-    "data": [
+    "inventory": [
         {
             "item_id": "123e4567-e89b-12d3-a456-426614174000",
-            "current_stock": 5,
-            "total_weight": 2.5,
-            "weight_unit": "kg"
+            "item_name": "Chicken Breast",
+            "quantity": 5,
+            "last_updated": "2024-03-21T15:04:05Z",
+            "weight": 2500.0,
+            "weight_unit": "g"
         }
-    ],
-    "pagination": {
-        "total": 100,
-        "page": 1,
-        "per_page": 20
-    }
+    ]
+}
+```
+
+Query Parameters:
+- None
+
+Response Fields:
+- `item_id`: UUID of the item
+- `item_name`: Name of the item
+- `quantity`: Current quantity in inventory (always positive)
+- `last_updated`: Timestamp of the last inventory change
+- `weight`: Total weight of items in inventory
+- `weight_unit`: Unit of weight measurement (g, kg, lb, oz)
+
+Notes:
+- Only returns items with positive inventory (quantity > 0)
+- Weight is aggregated from all inventory entries
+- Last updated reflects the most recent inventory change
+
+#### Get Item Status
+```http
+GET /api/inventory/:item_id/status
+Authorization: Bearer <token>
+
+Response: 200 OK
+{
+    "item_id": "123e4567-e89b-12d3-a456-426614174000",
+    "current_stock": 5,
+    "total_weight": 2.5,
+    "weight_unit": "kg"
 }
 ```
 
