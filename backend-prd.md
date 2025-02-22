@@ -97,7 +97,18 @@ id	UUID	Unique identifier.
 item_id	UUID	References items.id.
 tag_id	UUID	References tags.id.
 
-3. API Endpoints
+3. Inventory Calculation
+
+The system sums all inventory log records for a given item to calculate the current stock levels.
+
+Formula:
+Total Inventory for an Item = SUM(inventory_log.change) WHERE item_id = {ITEM_ID}
+
+	•	Positive values (+) represent added inventory.
+	•	Negative values (-) represent removed inventory.
+	•	The total sum provides the net quantity available for the item.
+
+4. API Endpoints
 
 3.1 Category APIs
 
